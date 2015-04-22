@@ -1,18 +1,18 @@
 package org.michenux.drodrolib.gms.gplus;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.google.android.gms.common.SignInButton;
 
 import org.michenux.drodrolib.MCXApplication;
 import org.michenux.drodrolib.R;
 import org.michenux.drodrolib.security.UserHelper;
 import org.michenux.drodrolib.security.UserSessionCallback;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
@@ -28,7 +28,8 @@ public class GooglePlusLoginFragment extends Fragment implements UserSessionCall
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MCXApplication) getActivity().getApplication()).inject(this);
+
+        ((MCXApplication) getActivity().getApplication()).mCXComponent().inject(this);
 
         mGoogleApiClientDelegate = new GoogleApiClientDelegate(this.getActivity(), mUserHelper, savedInstanceState);
         mGoogleApiClientDelegate.setUserSessionCallback(this);

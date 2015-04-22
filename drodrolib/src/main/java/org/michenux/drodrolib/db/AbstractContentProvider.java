@@ -1,5 +1,9 @@
 package org.michenux.drodrolib.db;
 
+import org.michenux.drodrolib.MCXApplication;
+import org.michenux.drodrolib.MCXComponent;
+import org.michenux.drodrolib.db.sqlite.SQLiteDatabaseFactory;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -8,9 +12,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-
-import org.michenux.drodrolib.MCXApplication;
-import org.michenux.drodrolib.db.sqlite.SQLiteDatabaseFactory;
 
 import javax.inject.Inject;
 
@@ -25,6 +26,7 @@ public abstract class AbstractContentProvider extends ContentProvider {
     private String mTableName ;
     private String mBasePath;
 
+
     @Inject
     SQLiteDatabaseFactory sqliteDatabaseFactory;
 
@@ -33,11 +35,15 @@ public abstract class AbstractContentProvider extends ContentProvider {
         this.mTableName = tableName;
         this.mUriMatcher = uriMatcher;
         this.mBasePath = basePath;
+
     }
 
     @Override
     public boolean onCreate() {
-        ((MCXApplication) getContext().getApplicationContext()).inject(this);
+
+        if(getComponent() != null){
+            getComponent().inject(this);
+        }
         return true;
     }
 
@@ -49,6 +55,9 @@ public abstract class AbstractContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
+        if( this.sqliteDatabaseFactory == null) {
+            getComponent().inject(this);
+        }
         SQLiteDatabase sqlDB = this.sqliteDatabaseFactory.getDatabase();
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
@@ -79,6 +88,11 @@ public abstract class AbstractContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         int uriType = mUriMatcher.match(uri);
+        if( this.sqliteDatabaseFactory == null) {
+            getComponent().inject(this);
+
+        }
+
         SQLiteDatabase sqlDB = this.sqliteDatabaseFactory.getDatabase();
         long id = 0;
         switch (uriType) {
@@ -96,6 +110,11 @@ public abstract class AbstractContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         int uriType = mUriMatcher.match(uri);
+        if( this.sqliteDatabaseFactory == null) {
+            getComponent().inject(this);
+
+        }
+
         SQLiteDatabase sqlDB = this.sqliteDatabaseFactory.getDatabase();
         int rowsUpdated = 0;
         switch (uriType) {
@@ -124,6 +143,11 @@ public abstract class AbstractContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int uriType = mUriMatcher.match(uri);
+        if( this.sqliteDatabaseFactory == null) {
+            getComponent().inject(this);
+
+        }
+
         SQLiteDatabase sqlDB = this.sqliteDatabaseFactory.getDatabase();
         int rowsDeleted = 0;
         switch (uriType) {
@@ -147,5 +171,11 @@ public abstract class AbstractContentProvider extends ContentProvider {
         }
         getContext().getContentResolver().notifyChange(uri, null);
         return rowsDeleted;
+    }
+
+
+
+    private MCXComponent getComponent () {
+        return ((MCXApplication) getContext().getApplicationContext()).mCXComponent();
     }
 }

@@ -1,5 +1,17 @@
 package org.michenux.yourappidea.tutorial;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
+import org.lucasr.twowayview.ItemClickSupport;
+import org.lucasr.twowayview.widget.TwoWayView;
+import org.michenux.drodrolib.db.utils.CursorUtils;
+import org.michenux.yourappidea.HasComponent;
+import org.michenux.yourappidea.R;
+import org.michenux.yourappidea.YourApplication;
+import org.michenux.yourappidea.tutorial.sync.TutorialContentProvider;
+import org.michenux.yourappidea.tutorial.sync.TutorialSyncAdapter;
+import org.michenux.yourappidea.tutorial.sync.TutorialSyncHelper;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +26,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,21 +34,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import org.lucasr.twowayview.ItemClickSupport;
-import org.lucasr.twowayview.widget.TwoWayView;
-import org.michenux.drodrolib.db.utils.CursorUtils;
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
-import org.michenux.yourappidea.tutorial.sync.TutorialContentProvider;
-import org.michenux.yourappidea.tutorial.sync.TutorialSyncAdapter;
-import org.michenux.yourappidea.tutorial.sync.TutorialSyncHelper;
-
 import javax.inject.Inject;
 
 public class TutorialListFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener, ItemClickSupport.OnItemClickListener {
+
+    public interface Injector {
+        void inject(TutorialListFragment tutorialListFragment);
+    }
 
     private boolean mHasSync = false;
 
@@ -69,7 +73,8 @@ public class TutorialListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((YourApplication) getActivity().getApplication()).inject(this);
+        ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
+
         setRetainInstance(true);
         setHasOptionsMenu(true);
     }

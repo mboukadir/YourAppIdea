@@ -1,5 +1,7 @@
 package org.michenux.yourappidea.donations;
 
+import org.michenux.yourappidea.R;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,15 +12,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
-
 public class DonateFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((YourApplication) getActivity().getApplication()).inject(this);
     }
 
     @Override

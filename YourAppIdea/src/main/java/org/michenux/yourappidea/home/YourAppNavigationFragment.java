@@ -1,8 +1,5 @@
 package org.michenux.yourappidea.home;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
 import org.michenux.drodrolib.gms.gplus.GoogleApiClientDelegate;
 import org.michenux.drodrolib.security.UserHelper;
 import org.michenux.drodrolib.ui.navdrawer.NavDrawerActivityConfiguration;
@@ -14,6 +11,7 @@ import org.michenux.drodrolib.ui.navdrawer.items.NavMenuHeader;
 import org.michenux.drodrolib.ui.navdrawer.items.NavMenuLabelWithIcon;
 import org.michenux.drodrolib.ui.navdrawer.items.NavMenuLoginHeader;
 import org.michenux.drodrolib.ui.navdrawer.items.NavMenuSection;
+import org.michenux.yourappidea.HasComponent;
 import org.michenux.yourappidea.NavigationController;
 import org.michenux.yourappidea.R;
 import org.michenux.yourappidea.airport.AirportListFragment;
@@ -24,11 +22,20 @@ import org.michenux.yourappidea.friends.FriendMainFragment;
 import org.michenux.yourappidea.map.SimpleMapFragment;
 import org.michenux.yourappidea.tutorial.TutorialListFragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class YourAppNavigationFragment extends NavigationDrawerFragment {
+
+    public interface Injector {
+
+        void inject(YourAppNavigationFragment yourAppNavigationFragment);
+
+    }
 
     @Inject
     NavigationController navController;
@@ -48,6 +55,7 @@ public class YourAppNavigationFragment extends NavigationDrawerFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if ( savedInstanceState != null ) {
             mPrimaryMenuDisplayed = savedInstanceState.getBoolean("primaryMenuDisplayed");
         }
@@ -55,7 +63,10 @@ public class YourAppNavigationFragment extends NavigationDrawerFragment {
 
     @Override
     protected NavDrawerActivityConfiguration createNavigurationConfiguration() {
+        ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
+
         NavMenuLoginHeader.OnHeaderProfileMenuListener mHeaderArrowListener = new NavMenuLoginHeader.OnHeaderProfileMenuListener() {
+
 
             @Override
             public void doLogin() {

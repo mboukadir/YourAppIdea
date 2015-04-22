@@ -1,5 +1,22 @@
 package org.michenux.yourappidea.home;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+import org.michenux.drodrolib.gms.gplus.GoogleApiClientDelegate;
+import org.michenux.drodrolib.info.AppUsageUtils;
+import org.michenux.drodrolib.security.SecurityUtils;
+import org.michenux.drodrolib.security.UserHelper;
+import org.michenux.drodrolib.security.UserSessionCallback;
+import org.michenux.drodrolib.ui.navdrawer.NavigationDrawerFragment;
+import org.michenux.yourappidea.BuildConfig;
+import org.michenux.yourappidea.HasComponent;
+import org.michenux.yourappidea.NavigationController;
+import org.michenux.yourappidea.R;
+import org.michenux.yourappidea.YourAppComponent;
+import org.michenux.yourappidea.YourApplication;
+import org.michenux.yourappidea.facebook.FbLoginDelegate;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,30 +26,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-
-import org.michenux.drodrolib.gms.gplus.GoogleApiClientDelegate;
-import org.michenux.drodrolib.security.UserSessionCallback;
-import org.michenux.drodrolib.ui.navdrawer.NavigationDrawerFragment;
-import org.michenux.yourappidea.facebook.FbLoginDelegate;
-import org.michenux.drodrolib.info.AppUsageUtils;
-import org.michenux.drodrolib.security.SecurityUtils;
-import org.michenux.drodrolib.security.UserHelper;
-import org.michenux.yourappidea.BuildConfig;
-import org.michenux.yourappidea.NavigationController;
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
-
 import javax.inject.Inject;
 
-public class YourAppMainActivity extends ActionBarActivity implements UserSessionCallback {
+public class YourAppMainActivity extends ActionBarActivity implements
+        HasComponent<YourAppMainActivityComponent>, UserSessionCallback {
 
+    private YourAppMainActivityComponent component;
     @Inject
     NavigationController navController;
 
     @Inject
-    UserHelper mUserHelper;
+    UserHelper userHelper;
+
 
     private AdView mAdView ;
 
@@ -45,7 +50,9 @@ public class YourAppMainActivity extends ActionBarActivity implements UserSessio
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((YourApplication) getApplication()).inject(this);
+
+        initializeInjector(YourApplication.getYourApplication(this).yourAppComponent());
+
         setContentView(R.layout.main);
 
         // toolbar
@@ -79,10 +86,10 @@ public class YourAppMainActivity extends ActionBarActivity implements UserSessio
         mAdView.loadAd(adRequest);
 
         // social networks
-        mFbLoginDelegate = new FbLoginDelegate(mUserHelper, this, savedInstanceState);
+        mFbLoginDelegate = new FbLoginDelegate(userHelper, this, savedInstanceState);
         mFbLoginDelegate.setUserSessionCallback(this);
 
-        mGoogleApiClientDlg = new GoogleApiClientDelegate(this, mUserHelper, savedInstanceState);
+        mGoogleApiClientDlg = new GoogleApiClientDelegate(this, userHelper, savedInstanceState);
         mGoogleApiClientDlg.setUserSessionCallback(this);
     }
 
@@ -192,5 +199,18 @@ public class YourAppMainActivity extends ActionBarActivity implements UserSessio
 
     public GoogleApiClientDelegate getGoogleApiClientDlg() {
         return mGoogleApiClientDlg;
+    }
+
+    public void initializeInjector(YourAppComponent yourAppComponent) {
+
+        component = DaggerYourAppMainActivityComponent.builder().yourAppComponent(
+                yourAppComponent).yourAppMainActivityModule(new YourAppMainActivityModule(this)).build();
+        component.injectActivity(this);
+
+    }
+
+    @Override
+    public YourAppMainActivityComponent getComponent() {
+        return component;
     }
 }

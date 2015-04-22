@@ -1,14 +1,5 @@
 package org.michenux.yourappidea;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.transition.TransitionInflater;
-
 import org.michenux.drodrolib.ui.changelog.ChangeLogHelper;
 import org.michenux.drodrolib.ui.changelog.EulaChangeLogChainHelper;
 import org.michenux.drodrolib.ui.eula.EulaHelper;
@@ -17,6 +8,15 @@ import org.michenux.yourappidea.home.LoginActivity;
 import org.michenux.yourappidea.home.MainFragment;
 import org.michenux.yourappidea.home.YourAppMainActivity;
 import org.michenux.yourappidea.settings.SettingsFragment;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.transition.TransitionInflater;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,14 +27,14 @@ public class NavigationController {
 
     public static final String HOME_FRAGMENT_TAG = "home";
 
-	@Inject public NavigationController() {
+    @Inject public NavigationController() {
 		
-	}
+    }
 	
-	public void startAppRating(Context context) {
+    public void startAppRating(Context context) {
 		context.startActivity(new Intent(Intent.ACTION_VIEW, Uri
 				.parse("market://details?id=" + context.getPackageName())));
-	}
+    }
 
     public void goHomeFragment( YourAppMainActivity activity) {
         MainFragment fg = new MainFragment();

@@ -1,13 +1,12 @@
 package org.michenux.drodrolib.ui.navdrawer;
 
+import org.michenux.drodrolib.MCXApplication;
+
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -23,8 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import org.michenux.drodrolib.MCXApplication;
 
 import java.util.List;
 
@@ -50,7 +47,7 @@ public abstract class NavigationDrawerFragment extends Fragment implements NavDr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MCXApplication) getActivity().getApplication()).inject(this);
+        ((MCXApplication) getActivity().getApplication()).mCXComponent().inject(this);
         setHasOptionsMenu(true);
 
         if ( savedInstanceState == null ) {

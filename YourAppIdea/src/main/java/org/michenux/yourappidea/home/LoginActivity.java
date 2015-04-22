@@ -1,5 +1,10 @@
 package org.michenux.yourappidea.home;
 
+import org.michenux.yourappidea.HasComponent;
+import org.michenux.yourappidea.R;
+import org.michenux.yourappidea.YourAppComponent;
+import org.michenux.yourappidea.YourApplication;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,13 +12,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import org.michenux.yourappidea.R;
+public class LoginActivity extends ActionBarActivity implements HasComponent<LoginActivityComponent> {
 
-public class LoginActivity extends ActionBarActivity {
 
+    private LoginActivityComponent component;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeInjector(YourApplication.getYourApplication(this).yourAppComponent());
         setContentView(R.layout.login);
 
         Toolbar mToolBar = (Toolbar) findViewById(R.id.toolbar);
@@ -40,4 +46,18 @@ public class LoginActivity extends ActionBarActivity {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    @Override
+    public LoginActivityComponent getComponent() {
+        return component;
+    }
+
+    private void initializeInjector(YourAppComponent yourAppComponent) {
+
+        component = DaggerLoginActivityComponent.builder().yourAppComponent(
+                yourAppComponent).loginActivityModule(new LoginActivityModule(this)).build();
+        component.injectActivity(this);
+
+    }
+
 }

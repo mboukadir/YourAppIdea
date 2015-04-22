@@ -1,5 +1,23 @@
 package org.michenux.yourappidea.tutorial.sync;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
+
+import org.michenux.drodrolib.battery.BatteryUtils;
+import org.michenux.drodrolib.content.ContentProviderUtils;
+import org.michenux.drodrolib.db.utils.CursorUtils;
+import org.michenux.drodrolib.info.AppUsageUtils;
+import org.michenux.drodrolib.network.connectivity.ConnectivityUtils;
+import org.michenux.drodrolib.network.volley.GsonRequest;
+import org.michenux.drodrolib.wordpress.json.WPJsonPost;
+import org.michenux.drodrolib.wordpress.json.WPJsonResponse;
+import org.michenux.yourappidea.BuildConfig;
+import org.michenux.yourappidea.R;
+import org.michenux.yourappidea.YourApplication;
+
 import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -21,25 +39,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
-
-import org.michenux.drodrolib.battery.BatteryUtils;
-import org.michenux.drodrolib.content.ContentProviderUtils;
-import org.michenux.drodrolib.db.utils.CursorUtils;
-import org.michenux.drodrolib.info.AppUsageUtils;
-import org.michenux.drodrolib.network.connectivity.ConnectivityUtils;
-import org.michenux.drodrolib.network.volley.GsonRequest;
-import org.michenux.drodrolib.wordpress.json.WPJsonPost;
-import org.michenux.drodrolib.wordpress.json.WPJsonResponse;
-import org.michenux.yourappidea.BuildConfig;
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
-import org.michenux.yourappidea.tutorial.sync.TutorialContentProvider;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +57,7 @@ public class TutorialSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private ContentResolver mContentResolver ;
 
+
     @Inject
     TutorialSyncHelper mSyncHelper;
 
@@ -66,7 +66,9 @@ public class TutorialSyncAdapter extends AbstractThreadedSyncAdapter {
      */
     public TutorialSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        ((YourApplication) context.getApplicationContext()).inject(this);
+
+       ((YourApplication) context.getApplicationContext()).yourAppComponent().inject(this);
+
         if (BuildConfig.DEBUG) {
             Log.d(YourApplication.LOG_TAG, "tutorialSyncAdapter()");
         }

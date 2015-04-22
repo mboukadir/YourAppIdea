@@ -1,5 +1,12 @@
 package org.michenux.yourappidea.facebook;
 
+import com.facebook.widget.LoginButton;
+
+import org.michenux.drodrolib.security.UserHelper;
+import org.michenux.drodrolib.security.UserSessionCallback;
+import org.michenux.yourappidea.HasComponent;
+import org.michenux.yourappidea.R;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,16 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.facebook.widget.LoginButton;
-
-import org.michenux.drodrolib.security.UserHelper;
-import org.michenux.drodrolib.security.UserSessionCallback;
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
-
 import javax.inject.Inject;
 
 public class FbLoginFragment extends Fragment implements UserSessionCallback {
+
+
+
+    public interface Injector {
+        FbLoginFragment inject(FbLoginFragment mainFragment);
+    }
 
     @Inject
     UserHelper mUserHelper;
@@ -26,7 +32,10 @@ public class FbLoginFragment extends Fragment implements UserSessionCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((YourApplication) getActivity().getApplication()).inject(this);
+
+        //((YourApplication) getActivity().getApplication()).mCXComponent().inject(this);
+
+        ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
 
         mFbLoginFlowHelper = new FbLoginDelegate(mUserHelper, this.getActivity(), savedInstanceState);
         mFbLoginFlowHelper.setUserSessionCallback(this);

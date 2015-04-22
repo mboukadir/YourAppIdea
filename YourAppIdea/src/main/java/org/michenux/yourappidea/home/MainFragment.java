@@ -1,5 +1,9 @@
 package org.michenux.yourappidea.home;
 
+import org.michenux.drodrolib.ui.navdrawer.NavigationDrawerFragment;
+import org.michenux.yourappidea.HasComponent;
+import org.michenux.yourappidea.R;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,16 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import org.michenux.drodrolib.ui.navdrawer.NavigationDrawerFragment;
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
-
 public class MainFragment extends Fragment implements View.OnClickListener {
+
+    interface Injector {
+        MainFragment inject(MainFragment mainFragment);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((YourApplication) getActivity().getApplication()).inject(this);
+
+        ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
     }
 
     @Override

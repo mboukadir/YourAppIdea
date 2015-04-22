@@ -1,57 +1,40 @@
 package org.michenux.drodrolib;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProvider;
-import android.support.v4.app.Fragment;
+import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
+public abstract  class MCXApplication extends Application {
 
-import dagger.ObjectGraph;
+    public static final String LOG_TAG = "MCX";
 
-public class MCXApplication extends Application {
+    private MCXComponent component;
 
-	public static final String LOG_TAG = "MCX";
 
-	private ObjectGraph objectGraph;
-	
-	public void inject(Activity activity) {
-		getObjectGraph().inject(activity);
-	}
-	
-	public void inject(ContentProvider contentProvider) {
-		getObjectGraph().inject(contentProvider) ;
-	}
-
-    public void inject(Fragment fragment) {
-        getObjectGraph().inject(fragment);
+    @Override public void onCreate() {
+        super.onCreate();
+        initializeInjector();
+        doAfterFwkInitializeInjector();
     }
 
-    public void inject(AbstractThreadedSyncAdapter fragment) {
-        getObjectGraph().inject(fragment);
+    private void initializeInjector() {
+
+        component = DaggerMCXComponent.builder().mCXModule(new MCXModule()).build();
+        component.inject(this);
     }
 
-    public void injectSelf() {
-        getObjectGraph().inject(this);
+
+    public MCXComponent mCXComponent() {
+        return component;
     }
 
-	public synchronized ObjectGraph getObjectGraph() {
-		if (objectGraph == null) {
-			List<Object> modules = new ArrayList<>();
-			buildDaggerModules(modules);
-			this.objectGraph = ObjectGraph.create(modules.toArray());
-			onObjectGraphCreated(this.objectGraph);
-		}
-		return objectGraph;
-	}
-	
-	public void buildDaggerModules( List<Object> modules) {
-		modules.add(new MCXModule());
-	}
-	
-	public void onObjectGraphCreated( ObjectGraph objectGraph) {
-		
-	}
+    public static MCXApplication get(Context context) {
+        return (MCXApplication) context.getApplicationContext();
+    }
+
+    /**
+     *
+     */
+    //TODO Rename this method
+    abstract public void doAfterFwkInitializeInjector();
+
 }

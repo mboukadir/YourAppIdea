@@ -1,5 +1,21 @@
 package org.michenux.yourappidea.aroundme;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+
+import org.michenux.drodrolib.network.connectivity.ConnectivityUtils;
+import org.michenux.yourappidea.BuildConfig;
+import org.michenux.yourappidea.R;
+import org.michenux.yourappidea.YourApplication;
+
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Address;
@@ -17,21 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
-import org.michenux.drodrolib.network.connectivity.ConnectivityUtils;
-import org.michenux.yourappidea.BuildConfig;
-import org.michenux.yourappidea.R;
-import org.michenux.yourappidea.YourApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class AroundMeFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((YourApplication) getActivity().getApplication()).inject(this);
+     //TODO MBR   ((YourApplication) getActivity().getApplication()).inject(this);
         setRetainInstance(true);
         setHasOptionsMenu(true);
 

@@ -1,8 +1,5 @@
 package org.michenux.yourappidea;
 
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Log;
-
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -12,14 +9,12 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import org.michenux.drodrolib.MCXApplication;
 import org.michenux.drodrolib.db.sqlite.SQLiteDatabaseFactory;
 import org.michenux.drodrolib.network.volley.BitmapCacheHolder;
-import org.michenux.drodrolib.security.SecurityUtils;
 import org.michenux.yourappidea.tutorial.sync.TutorialSyncHelper;
 
-import java.util.List;
+import android.content.Context;
+import android.content.pm.PackageManager;
 
 import javax.inject.Inject;
-
-import dagger.ObjectGraph;
 
 public class YourApplication extends MCXApplication {
 
@@ -27,13 +22,24 @@ public class YourApplication extends MCXApplication {
 
     private boolean syncAdapterRunning = false;
 
+    private YourAppComponent mYourAppComponent;
+
     @Inject
     TutorialSyncHelper tutorialSyncHelper;
+
+    @Inject
+    SQLiteDatabaseFactory sQLiteDatabaseFactory;
+
+    @Inject
+    BitmapCacheHolder bitmapCacheHolder;
+
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.injectSelf();
+
+     //   this.injectSelf();
 
         // Enable tutorial sync
         this.tutorialSyncHelper.createTutorialAccount(this);
@@ -80,6 +86,55 @@ public class YourApplication extends MCXApplication {
         ImageLoader.getInstance().init(config);
     }
 
+    public boolean isSyncAdapterRunning() {
+        return syncAdapterRunning;
+    }
+
+    public void setSyncAdapterRunning(boolean syncAdapterRunning) {
+        this.syncAdapterRunning = syncAdapterRunning;
+    }
+
+
+    @Override
+    public void doAfterFwkInitializeInjector() {
+        this.initialiseInjector();
+        initSqliteDBFactory();
+        initBitmapCacheHolder();
+
+    }
+
+    private void initialiseInjector() {
+
+        mYourAppComponent = DaggerYourAppComponent.builder().mCXComponent(this.mCXComponent()).yourAppModule(new YourAppModule(this)).build();
+        mYourAppComponent.inject(this);
+    }
+
+    private void initSqliteDBFactory() {
+
+        try {
+            sQLiteDatabaseFactory.init(this,true,true);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void initBitmapCacheHolder() {
+
+        bitmapCacheHolder.init(this, 50000000);
+
+    }
+
+    public YourAppComponent yourAppComponent() {
+        return mYourAppComponent;
+    }
+
+    public static YourApplication getYourApplication(Context context) {
+        return (YourApplication) context.getApplicationContext();
+    }
+
+/*
+
     @Override
     public void buildDaggerModules(List<Object> modules) {
         modules.add(new YourAppModule());
@@ -97,12 +152,7 @@ public class YourApplication extends MCXApplication {
         BitmapCacheHolder bitmapCacheHolder = objectGraph.get(BitmapCacheHolder.class);
         bitmapCacheHolder.init(this, 50000000);
     }
+*/
 
-    public boolean isSyncAdapterRunning() {
-        return syncAdapterRunning;
-    }
 
-    public void setSyncAdapterRunning(boolean syncAdapterRunning) {
-        this.syncAdapterRunning = syncAdapterRunning;
-    }
 }
