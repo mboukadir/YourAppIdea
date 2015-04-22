@@ -31,12 +31,12 @@ import javax.inject.Inject;
 public class YourAppMainActivity extends ActionBarActivity implements
         HasComponent<YourAppMainActivityComponent>, UserSessionCallback {
 
-    private YourAppMainActivityComponent component;
+    private YourAppMainActivityComponent mComponent;
     @Inject
-    NavigationController navController;
+    NavigationController mNavigationController;
 
     @Inject
-    UserHelper userHelper;
+    UserHelper mUserHelper;
 
 
     private AdView mAdView ;
@@ -71,8 +71,8 @@ public class YourAppMainActivity extends ActionBarActivity implements
 
         // init fragment
         if (savedInstanceState == null) {
-            this.navController.goHomeFragment(this);
-            this.navController.showWhatsNew(this);
+            this.mNavigationController.goHomeFragment(this);
+            this.mNavigationController.showWhatsNew(this);
         }
 
         // ads
@@ -86,10 +86,10 @@ public class YourAppMainActivity extends ActionBarActivity implements
         mAdView.loadAd(adRequest);
 
         // social networks
-        mFbLoginDelegate = new FbLoginDelegate(userHelper, this, savedInstanceState);
+        mFbLoginDelegate = new FbLoginDelegate(mUserHelper, this, savedInstanceState);
         mFbLoginDelegate.setUserSessionCallback(this);
 
-        mGoogleApiClientDlg = new GoogleApiClientDelegate(this, userHelper, savedInstanceState);
+        mGoogleApiClientDlg = new GoogleApiClientDelegate(this, mUserHelper, savedInstanceState);
         mGoogleApiClientDlg.setUserSessionCallback(this);
     }
 
@@ -109,7 +109,7 @@ public class YourAppMainActivity extends ActionBarActivity implements
             // Else, nothing in the direct fragment back stack
             else {
                 if ( currentFragment != null && !NavigationController.HOME_FRAGMENT_TAG.equals(currentFragment.getTag())) {
-                    this.navController.goHomeFragment(this);
+                    this.mNavigationController.goHomeFragment(this);
                 }
                 else {
                     super.onBackPressed();
@@ -203,14 +203,14 @@ public class YourAppMainActivity extends ActionBarActivity implements
 
     public void initializeInjector(YourAppComponent yourAppComponent) {
 
-        component = DaggerYourAppMainActivityComponent.builder().yourAppComponent(
+        mComponent = DaggerYourAppMainActivityComponent.builder().yourAppComponent(
                 yourAppComponent).yourAppMainActivityModule(new YourAppMainActivityModule(this)).build();
-        component.injectActivity(this);
+        mComponent.injectActivity(this);
 
     }
 
     @Override
     public YourAppMainActivityComponent getComponent() {
-        return component;
+        return mComponent;
     }
 }

@@ -133,26 +133,7 @@ public class YourApplication extends MCXApplication {
         return (YourApplication) context.getApplicationContext();
     }
 
-/*
 
-    @Override
-    public void buildDaggerModules(List<Object> modules) {
-        modules.add(new YourAppModule());
-    }
-
-    @Override
-    public void onObjectGraphCreated(ObjectGraph objectGraph) {
-        super.onObjectGraphCreated(objectGraph);
-        SQLiteDatabaseFactory sqliteDbFactory = objectGraph.get(SQLiteDatabaseFactory.class);
-        try {
-            sqliteDbFactory.init(this, true, true);
-        } catch (NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        BitmapCacheHolder bitmapCacheHolder = objectGraph.get(BitmapCacheHolder.class);
-        bitmapCacheHolder.init(this, 50000000);
-    }
-*/
 
 
 }
