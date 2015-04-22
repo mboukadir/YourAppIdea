@@ -35,7 +35,7 @@ The demo application is available on Google Play:
 
 **Architecture**
 
-* Dependency injection with Dagger
+* Dependency injection with Dagger 2
 
 
 **Persistence**
