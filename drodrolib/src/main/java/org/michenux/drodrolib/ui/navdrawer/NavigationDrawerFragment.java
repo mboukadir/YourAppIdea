@@ -1,7 +1,5 @@
 package org.michenux.drodrolib.ui.navdrawer;
 
-import org.michenux.drodrolib.MCXApplication;
-
 import android.annotation.TargetApi;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -47,7 +45,9 @@ public abstract class NavigationDrawerFragment extends Fragment implements NavDr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MCXApplication) getActivity().getApplication()).mCXComponent().inject(this);
+
+        this.intializeInjector();
+
         setHasOptionsMenu(true);
 
         if ( savedInstanceState == null ) {
@@ -311,5 +311,10 @@ public abstract class NavigationDrawerFragment extends Fragment implements NavDr
 
     public CharSequence getDrawerTitle() {
         return mDrawerTitle;
+    }
+
+    public void intializeInjector() {
+
+        //DO Nothings
     }
 }

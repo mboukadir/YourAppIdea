@@ -28,8 +28,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 
         ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
 
-        //TODO MBR ((YourApplication) getActivity().getApplication()).inject(this);
-
         addPreferencesFromResource(R.xml.preferences);
         PreferenceManager preferenceManager = getPreferenceManager();
         preferenceManager.getSharedPreferences()

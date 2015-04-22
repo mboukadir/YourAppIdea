@@ -55,7 +55,6 @@ public class YourAppNavigationFragment extends NavigationDrawerFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         if ( savedInstanceState != null ) {
             mPrimaryMenuDisplayed = savedInstanceState.getBoolean("primaryMenuDisplayed");
         }
@@ -63,7 +62,7 @@ public class YourAppNavigationFragment extends NavigationDrawerFragment {
 
     @Override
     protected NavDrawerActivityConfiguration createNavigurationConfiguration() {
-        ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
+
 
         NavMenuLoginHeader.OnHeaderProfileMenuListener mHeaderArrowListener = new NavMenuLoginHeader.OnHeaderProfileMenuListener() {
 
@@ -223,5 +222,13 @@ public class YourAppNavigationFragment extends NavigationDrawerFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("primaryMenuDisplayed", this.mPrimaryMenuDisplayed);
+    }
+
+    @Override
+    public void intializeInjector() {
+        super.intializeInjector();
+
+        ((HasComponent<Injector>) getActivity()).getComponent().inject(this);
+
     }
 }
